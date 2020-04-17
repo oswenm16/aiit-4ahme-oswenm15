@@ -72,7 +72,8 @@ public class Employee {
     Gson gson = new Gson();
 
     public static void main(String[] args) {
-        Gson gson = new Gson();
+      
+         Gson gson = new Gson();
         Employee employee = new Employee();
         employee.setId(1);
         employee.setFirstName("Max");

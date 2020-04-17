@@ -5,7 +5,9 @@
  */
 package server_client_stopuhr;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,31 +20,29 @@ import java.util.List;
 public class Server {
 
     private ServerSocket serverSocket;
-    private final List<ConnectionHandler> handler = new ArrayList<>();
+    private final List<ConnectionHandler> handlers = new ArrayList<>();
     private long timeOffset;
     private long startMillis;
 
     public void start(int port) throws IOException {
         timeOffset = 0;
+        startMillis = System.currentTimeMillis();
         serverSocket = new ServerSocket(port);
         while (true) {
             timeOffset++;
             
-            startMillis = System.currentTimeMillis();
-            
             final Socket clientSocket = serverSocket.accept();
             ConnectionHandler handler = new ConnectionHandler(clientSocket);
             new Thread(handler).start();
-
+            handlers.add(handler);
         }
     }
 
     public boolean isTimerRunning() {
-
     }
 
     public long getTimerMillis() {
-
+        return  System.currentTimeMillis() - startMillis;
     }
 
     public static void main(String[] args) {
@@ -68,8 +68,7 @@ public class Server {
 
         @Override
         public void run() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+            
 
     }
 }

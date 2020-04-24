@@ -5,13 +5,17 @@
  */
 package server_client_stopuhr;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,7 +34,7 @@ public class Server {
         serverSocket = new ServerSocket(port);
         while (true) {
             timeOffset++;
-            
+
             final Socket clientSocket = serverSocket.accept();
             ConnectionHandler handler = new ConnectionHandler(clientSocket);
             new Thread(handler).start();
@@ -39,17 +43,19 @@ public class Server {
     }
 
     public boolean isTimerRunning() {
+        return
     }
 
     public long getTimerMillis() {
-        return  System.currentTimeMillis() - startMillis;
+        return System.currentTimeMillis() - startMillis;
     }
 
-    public static void main(String[] args) {
-        new Server();
+    public static void main(String[] args) throws IOException {
+        Server server = new Server();
+        server.start(8080);
     }
 
-    class ConnectionHandler implements Runnable{
+    class ConnectionHandler implements Runnable {
 
         private Socket socket;
         private boolean master;
@@ -68,7 +74,18 @@ public class Server {
 
         @Override
         public void run() {
-            
-
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String line;
+                line = reader.readLine();
+                
+                Gson gson = new Gson();
+                gson.toJson(line);
+                Request rq = gson.fromJson(line, Request.class);
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

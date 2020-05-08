@@ -43,11 +43,15 @@ public class Server {
     }
 
     public boolean isTimerRunning() {
-        return
+        return startMillis > 0;
     }
 
     public long getTimerMillis() {
-        return System.currentTimeMillis() - startMillis;
+        if (startMillis > 0) {
+            return System.currentTimeMillis() - startMillis + timeOffset;
+        } else {
+            return timeOffset;
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -65,24 +69,47 @@ public class Server {
         }
 
         public boolean isSocket() {
-
+            return socket.isClosed();
         }
 
         public boolean isMaster() {
-
+            return master;
         }
 
         @Override
         public void run() {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String line;
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                final String line;
                 line = reader.readLine();
-                
-                Gson gson = new Gson();
+
+                final Gson gson = new Gson();
                 gson.toJson(line);
-                Request rq = gson.fromJson(line, Request.class);
-                
+                final Request rq = gson.fromJson(line, Request.class);
+
+                if (master == true) {
+                    if (rq.isMaster()) {
+                        for (ConnectionHandler ch : handlers) {
+                            master = true;
+                            if (ch != this && ch.isMaster() == true) {
+                                master = false;
+                            }
+                        }
+
+                        if (rq.isStart()) {
+                            startMillis = System.currentTimeMillis();
+                        }
+                        if (rq.isStop()) {
+                            startMillis = 0;
+                        }
+                        if (rq.isClear()) {
+                            timeOffset = 0;
+                        }
+                        if (rq.isEnd()) {
+                            handlers.remove(this);
+                        }
+                    }
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

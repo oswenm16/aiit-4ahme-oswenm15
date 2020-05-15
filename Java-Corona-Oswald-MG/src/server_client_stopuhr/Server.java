@@ -33,12 +33,22 @@ public class Server {
         startMillis = System.currentTimeMillis();
         serverSocket = new ServerSocket(port);
         while (true) {
-            timeOffset++;
 
             final Socket clientSocket = serverSocket.accept();
-            ConnectionHandler handler = new ConnectionHandler(clientSocket);
-            new Thread(handler).start();
-            handlers.add(handler);
+            if (handlers.size() < 3) {
+                ConnectionHandler handler = new ConnectionHandler(clientSocket);
+                new Thread(handler).start();
+                handlers.add(handler);
+            for(int i = 0; i < 3; i++){
+		    if(!clientSocket.isConnected()){
+			clientSocket.close();
+		    }
+		}
+            
+            } else {
+                clientSocket.close();
+            }
+
         }
     }
 
@@ -47,10 +57,10 @@ public class Server {
     }
 
     public long getTimerMillis() {
-        if (startMillis > 0) {
-            return System.currentTimeMillis() - startMillis + timeOffset;
-        } else {
+        if (startMillis == 0) {
             return timeOffset;
+        } else {
+            return timeOffset + (System.currentTimeMillis() - startMillis);
         }
     }
 
@@ -98,6 +108,7 @@ public class Server {
 
                         if (rq.isStart()) {
                             startMillis = System.currentTimeMillis();
+                            
                         }
                         if (rq.isStop()) {
                             startMillis = 0;
@@ -107,6 +118,8 @@ public class Server {
                         }
                         if (rq.isEnd()) {
                             handlers.remove(this);
+                            socket.close();
+                            serverSocket.close();
                         }
                     }
                 }

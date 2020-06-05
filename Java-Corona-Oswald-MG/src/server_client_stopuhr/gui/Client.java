@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server_client_stopuhr;
+package server_client_stopuhr.gui;
 
 /**
  *
@@ -29,7 +29,7 @@ public class Client extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jpanCenter = new javax.swing.JPanel();
-        jtfCenter = new javax.swing.JTextField();
+        jlabCenter = new javax.swing.JLabel();
         jpanEast = new javax.swing.JPanel();
         jbutConnect = new javax.swing.JButton();
         jbutDisconnect = new javax.swing.JButton();
@@ -39,21 +39,25 @@ public class Client extends javax.swing.JPanel {
         jbutEnd = new javax.swing.JButton();
         jpanNorth = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jSlider1 = new javax.swing.JSlider();
+        jSlider = new javax.swing.JSlider();
         jLabel2 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
-        jpanCenter.setLayout(new java.awt.GridLayout());
+        jpanCenter.setLayout(new java.awt.GridLayout(1, 0));
 
-        jtfCenter.setText("jTextField1");
-        jpanCenter.add(jtfCenter);
+        jlabCenter.setFont(new java.awt.Font("Tahoma", 1, 100)); // NOI18N
+        jlabCenter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlabCenter.setText("0.000");
+        jlabCenter.setToolTipText("");
+        jlabCenter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jpanCenter.add(jlabCenter);
 
         add(jpanCenter, java.awt.BorderLayout.CENTER);
 
         java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
         jPanel2Layout.columnWidths = new int[] {0};
-        jPanel2Layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        jPanel2Layout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0};
         jpanEast.setLayout(jPanel2Layout);
 
         jbutConnect.setText("Connect");
@@ -65,6 +69,7 @@ public class Client extends javax.swing.JPanel {
         jpanEast.add(jbutConnect, gridBagConstraints);
 
         jbutDisconnect.setText("Stop");
+        jbutDisconnect.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -72,6 +77,7 @@ public class Client extends javax.swing.JPanel {
         jpanEast.add(jbutDisconnect, gridBagConstraints);
 
         jbutStart.setText("Disconnect");
+        jbutStart.setEnabled(false);
         jbutStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbutStartActionPerformed(evt);
@@ -85,6 +91,7 @@ public class Client extends javax.swing.JPanel {
         jpanEast.add(jbutStart, gridBagConstraints);
 
         jbutStop.setText("Start");
+        jbutStop.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -92,6 +99,7 @@ public class Client extends javax.swing.JPanel {
         jpanEast.add(jbutStop, gridBagConstraints);
 
         jbutClear.setText("Clear");
+        jbutClear.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -99,6 +107,7 @@ public class Client extends javax.swing.JPanel {
         jpanEast.add(jbutClear, gridBagConstraints);
 
         jbutEnd.setText("End");
+        jbutEnd.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
@@ -107,12 +116,20 @@ public class Client extends javax.swing.JPanel {
 
         add(jpanEast, java.awt.BorderLayout.EAST);
 
+        jpanNorth.setLayout(new java.awt.GridBagLayout());
+
         jLabel1.setText("Refreshrate: 1s");
-        jpanNorth.add(jLabel1);
-        jpanNorth.add(jSlider1);
+        jpanNorth.add(jLabel1, new java.awt.GridBagConstraints());
+
+        jSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSlider.setFocusTraversalPolicyProvider(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.1;
+        jpanNorth.add(jSlider, gridBagConstraints);
 
         jLabel2.setText("1ms");
-        jpanNorth.add(jLabel2);
+        jpanNorth.add(jLabel2, new java.awt.GridBagConstraints());
 
         add(jpanNorth, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
@@ -125,16 +142,16 @@ public class Client extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JSlider jSlider1;
+    private javax.swing.JSlider jSlider;
     private javax.swing.JButton jbutClear;
     private javax.swing.JButton jbutConnect;
     private javax.swing.JButton jbutDisconnect;
     private javax.swing.JButton jbutEnd;
     private javax.swing.JButton jbutStart;
     private javax.swing.JButton jbutStop;
+    private javax.swing.JLabel jlabCenter;
     private javax.swing.JPanel jpanCenter;
     private javax.swing.JPanel jpanEast;
     private javax.swing.JPanel jpanNorth;
-    private javax.swing.JTextField jtfCenter;
     // End of variables declaration//GEN-END:variables
 }

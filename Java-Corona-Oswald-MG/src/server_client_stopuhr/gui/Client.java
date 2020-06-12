@@ -14,7 +14,7 @@ import server_client_stopuhr.Response;
  *
  * @author maxos
  */
-public class Client extends javax.swing.JPanel {
+public class Client extends javax.swing.JFrame {
 
     /**
      * Creates new form Client
@@ -26,10 +26,9 @@ public class Client extends javax.swing.JPanel {
         jbutClear.setEnabled(false);
         jbutStart.setEnabled(false);
         jbutStop.setEnabled(false);
-        
+
     }
 
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -176,20 +175,10 @@ public class Client extends javax.swing.JPanel {
     }//GEN-LAST:event_jbutStartActionPerformed
 
     private void jbutConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutConnectActionPerformed
-        try{
-            ConnectionWorker worker = new ConnectionWorker();
-            worker = new MyConnectionWorker(8080,this);
-            worker.execute();
-            jbutConnect.setEnabled(false);
-            jbutDisconnect.setEnabled(true);
-            jbutClear.setEnabled(false);
-            jbutStart.setEnabled(false);
-            jbutStop.setEnabled(false);
-            jbutEnd.setEnabled(true);
 
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+        System.out.println("Button pressed" + Thread.currentThread().getId());
+        ConnectionWorker worker = new MyConnectionWorker(8080, "127.0.0.1");
+        worker.execute();
     }//GEN-LAST:event_jbutConnectActionPerformed
 
     private void jbutDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutDisconnectActionPerformed
@@ -227,17 +216,32 @@ public class Client extends javax.swing.JPanel {
 
     void handleResponse(Response r) {
     }
-    
-    private class MyConnectionWorker extends ConnectionWorker{
 
-        public MyConnectionWorker(int port, Client gui) throws IOException{
-            
+    private class MyConnectionWorker extends ConnectionWorker {
+
+        public MyConnectionWorker(int port, String hostName) {
+            super(port, hostName);
         }
 
         @Override
-        protected void process(List<Response> list) {
-            super.process(list);
+        protected void done() {
+
+            try {
+                String ergebnis = get();
+                System.out.println(ergebnis + " " + Thread.currentThread().getId());
+                jlabCenter.setText(ergebnis);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         }
-   
+
+        @Override
+        protected void process(List<Integer> chunks) {
+            for (int x : chunks) {
+                System.out.println("Process " + x + " Thread " + Thread.currentThread().getId());
+            }
+        }
+
     }
 }

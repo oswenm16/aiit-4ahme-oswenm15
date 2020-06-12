@@ -16,35 +16,30 @@ import server_client_stopuhr.Response;
  *
  * @author maxos
  */
-public class ConnectionWorker extends SwingWorker<Object, Response> {
-    private Socket socket;
-    private Client gui;
-
-    public ConnectionWorker() throws IOException {
-        this.gui = gui;
-        int port = 0;
-        socket = new Socket("127.0.0.1", port);
-    }
-        
-    @Override
-    protected Response doInBackground() throws Exception {
-        while(true){
-            Response resp = null;
-            publish(resp);
-        }
-    }
-
-    @Override
-    protected void process(List<Response> list) {
-        for(Response r : list){
-            gui.handleResponse(r);
-        }
-    }
-
-    @Override
-    protected void done() {
-        super.done(); //To change body of generated methods, choose Tools | Templates.
-    }
-   
+public class ConnectionWorker extends SwingWorker<String, Integer>{
     
+    private Socket socket;
+    
+
+    public ConnectionWorker(int port, String hostName) {
+        
+    }
+
+    @Override
+    protected String doInBackground() throws Exception{
+         System.out.println("Do in Background" + Thread.currentThread().getId());
+         Thread.sleep(1000);
+         
+         publish(1);
+       
+         Thread.sleep(1000);
+         
+         publish(2);
+         
+         Thread.sleep(1000);
+        return "OK";
+
+    }
+
 }
+

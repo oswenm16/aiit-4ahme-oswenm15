@@ -5,6 +5,11 @@
  */
 package server_client_stopuhr.gui;
 
+import java.io.IOException;
+import java.util.List;
+import server_client_stopuhr.Request;
+import server_client_stopuhr.Response;
+
 /**
  *
  * @author maxos
@@ -16,8 +21,15 @@ public class Client extends javax.swing.JPanel {
      */
     public Client() {
         initComponents();
+        jbutConnect.setEnabled(true);
+        jbutDisconnect.setEnabled(false);
+        jbutClear.setEnabled(false);
+        jbutStart.setEnabled(false);
+        jbutStop.setEnabled(false);
+        
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,6 +73,11 @@ public class Client extends javax.swing.JPanel {
         jpanEast.setLayout(jPanel2Layout);
 
         jbutConnect.setText("Connect");
+        jbutConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbutConnectActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -70,6 +87,11 @@ public class Client extends javax.swing.JPanel {
 
         jbutDisconnect.setText("Stop");
         jbutDisconnect.setEnabled(false);
+        jbutDisconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbutDisconnectActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -92,6 +114,11 @@ public class Client extends javax.swing.JPanel {
 
         jbutStop.setText("Start");
         jbutStop.setEnabled(false);
+        jbutStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbutStopActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -100,6 +127,11 @@ public class Client extends javax.swing.JPanel {
 
         jbutClear.setText("Clear");
         jbutClear.setEnabled(false);
+        jbutClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbutClearActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -108,6 +140,11 @@ public class Client extends javax.swing.JPanel {
 
         jbutEnd.setText("End");
         jbutEnd.setEnabled(false);
+        jbutEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbutEndActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
@@ -138,6 +175,39 @@ public class Client extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jbutStartActionPerformed
 
+    private void jbutConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutConnectActionPerformed
+        try{
+            ConnectionWorker worker = new ConnectionWorker();
+            worker = new MyConnectionWorker(8080,this);
+            worker.execute();
+            jbutConnect.setEnabled(false);
+            jbutDisconnect.setEnabled(true);
+            jbutClear.setEnabled(false);
+            jbutStart.setEnabled(false);
+            jbutStop.setEnabled(false);
+            jbutEnd.setEnabled(true);
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jbutConnectActionPerformed
+
+    private void jbutDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutDisconnectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbutDisconnectActionPerformed
+
+    private void jbutStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutStopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbutStopActionPerformed
+
+    private void jbutClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutClearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbutClearActionPerformed
+
+    private void jbutEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutEndActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbutEndActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -154,4 +224,20 @@ public class Client extends javax.swing.JPanel {
     private javax.swing.JPanel jpanEast;
     private javax.swing.JPanel jpanNorth;
     // End of variables declaration//GEN-END:variables
+
+    void handleResponse(Response r) {
+    }
+    
+    private class MyConnectionWorker extends ConnectionWorker{
+
+        public MyConnectionWorker(int port, Client gui) throws IOException{
+            
+        }
+
+        @Override
+        protected void process(List<Response> list) {
+            super.process(list);
+        }
+   
+    }
 }

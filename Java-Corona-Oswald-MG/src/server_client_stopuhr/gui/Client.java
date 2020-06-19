@@ -6,7 +6,10 @@
 package server_client_stopuhr.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import server_client_stopuhr.Request;
 import server_client_stopuhr.Response;
 
@@ -176,9 +179,13 @@ public class Client extends javax.swing.JFrame {
 
     private void jbutConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutConnectActionPerformed
 
-        System.out.println("Button pressed" + Thread.currentThread().getId());
-        ConnectionWorker worker = new MyConnectionWorker(8080, "127.0.0.1");
-        worker.execute();
+        try {
+            System.out.println("Button pressed" + Thread.currentThread().getId());
+            ConnectionWorker worker = new MyConnectionWorker(8080, "127.0.0.1");
+            worker.execute();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jbutConnectActionPerformed
 
     private void jbutDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutDisconnectActionPerformed
@@ -219,7 +226,7 @@ public class Client extends javax.swing.JFrame {
 
     private class MyConnectionWorker extends ConnectionWorker {
 
-        public MyConnectionWorker(int port, String hostName) {
+        public MyConnectionWorker(int port, String hostName) throws IOException {
             super(port, hostName);
         }
 
@@ -236,10 +243,20 @@ public class Client extends javax.swing.JFrame {
 
         }
 
-        @Override
-        protected void process(List<Integer> chunks) {
-            for (int x : chunks) {
-                System.out.println("Process " + x + " Thread " + Thread.currentThread().getId());
+        protected void process(ArrayList<Response> list) {
+            Response resp = list.get(0);
+
+            if (resp.isMaster()) {
+                jbutConnect.setEnabled(false);
+                jbutDisconnect.setEnabled(true);
+                jbutStart.setEnabled(true);
+                jbutStop.setEnabled(true);
+                jbutClear.setEnabled(true);
+                jbutEnd.setEnabled(true);
+
+            }
+            if (resp.isRunning()) {
+                jLabel1.setText(String.format("%.3f", resp.getTime()));
             }
         }
 

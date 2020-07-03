@@ -21,7 +21,10 @@ import server_client_stopuhr.Response;
  * @author maxos
  */
 public class ConnectionWorker extends SwingWorker<String, Integer> {
-
+    private boolean tryToStop;
+    private boolean tryToStart;
+    private boolean tryToClear;
+    private boolean tryToEnd;
     private final Socket socket;
 
     public ConnectionWorker(int port, String hostName) throws IOException {
@@ -36,11 +39,12 @@ public class ConnectionWorker extends SwingWorker<String, Integer> {
 
         while (true) {
             try {
-                final Request req = new Request();
+                final Request req = new Request(true, tryToStart, tryToStop, tryToClear, tryToEnd);
                 final String reqString = gson.toJson(req);
                 writer.write(reqString);
                 writer.flush();
 
+                
                 final String string = br.readLine();
                 final Response resp = gson.fromJson(string, Response.class);
 

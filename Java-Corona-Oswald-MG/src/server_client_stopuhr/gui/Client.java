@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import server_client_stopuhr.Request;
 import server_client_stopuhr.Response;
 
@@ -22,6 +23,11 @@ public class Client extends javax.swing.JFrame {
     /**
      * Creates new form Client
      */
+    private boolean tryToStop;
+    private boolean tryToStart;
+    private boolean tryToClear;
+    private boolean tryToEnd;
+
     public Client() {
         initComponents();
         jbutConnect.setEnabled(true);
@@ -174,7 +180,7 @@ public class Client extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbutStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutStartActionPerformed
-        // TODO add your handling code here:
+        tryToStart = true;
     }//GEN-LAST:event_jbutStartActionPerformed
 
     private void jbutConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutConnectActionPerformed
@@ -193,15 +199,15 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_jbutDisconnectActionPerformed
 
     private void jbutStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutStopActionPerformed
-        // TODO add your handling code here:
+        tryToStop = true;
     }//GEN-LAST:event_jbutStopActionPerformed
 
     private void jbutClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutClearActionPerformed
-        // TODO add your handling code here:
+        tryToClear = true;
     }//GEN-LAST:event_jbutClearActionPerformed
 
     private void jbutEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbutEndActionPerformed
-        // TODO add your handling code here:
+        tryToEnd = true;
     }//GEN-LAST:event_jbutEndActionPerformed
 
 
@@ -234,29 +240,43 @@ public class Client extends javax.swing.JFrame {
         protected void done() {
 
             try {
-                String ergebnis = get();
-                System.out.println(ergebnis + " " + Thread.currentThread().getId());
-                jlabCenter.setText(ergebnis);
+                get();
+                System.out.println("Thread beendet" + Thread.currentThread().getId());
             } catch (Exception ex) {
                 ex.printStackTrace();
+                JOptionPane.showMessageDialog(Client.this, "Fehler beim Beenden", "Fehler entstanden", JOptionPane.ERROR_MESSAGE);
             }
 
         }
 
         protected void process(ArrayList<Response> list) {
-            Response resp = list.get(0);
-
-            if (resp.isMaster()) {
-                jbutConnect.setEnabled(false);
-                jbutDisconnect.setEnabled(true);
-                jbutStart.setEnabled(true);
-                jbutStop.setEnabled(true);
-                jbutClear.setEnabled(true);
-                jbutEnd.setEnabled(true);
-
-            }
-            if (resp.isRunning()) {
-                jLabel1.setText(String.format("%.3f", resp.getTime()));
+            for (Response x : list) {
+                System.out.println("Process " + x + "Thread " + Thread.currentThread().getName());
+                if (x.isMaster()) {
+                    jbutStart.setEnabled(true);
+                    jbutConnect.setEnabled(false);
+                    jbutDisconnect.setEnabled(true);
+                    jbutStop.setEnabled(true);
+                    jbutClear.setEnabled(true);
+                    jbutEnd.setEnabled(true);
+                } else {
+                    jbutStart.setEnabled(false);
+                    jbutConnect.setEnabled(false);
+                    jbutDisconnect.setEnabled(true);
+                    jbutStop.setEnabled(false);
+                    jbutClear.setEnabled(false);
+                    jbutEnd.setEnabled(false);
+                }
+                if(x.isRunning()){
+                    jbutStart.setEnabled(false);
+                    jbutStop.setEnabled(true);
+                    jbutClear.setEnabled(true);
+                }else {
+                    jbutStart.setEnabled(true);
+                    jbutStop.setEnabled(false);
+                    jbutClear.setEnabled(false);
+                }
+                jLabel1.setText(String.format("%.3f", x.getTime()));
             }
         }
 

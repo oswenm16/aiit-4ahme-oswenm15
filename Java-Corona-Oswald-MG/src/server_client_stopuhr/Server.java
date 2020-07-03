@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server_client_stopuhr.gui.Client;
 
 /**
  *
@@ -76,7 +77,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         new Server().start(8080);
-
+ 
     }
 
     private class ConnectionHandler implements Runnable {

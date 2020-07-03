@@ -236,19 +236,6 @@ public class Client extends javax.swing.JFrame {
             super(port, hostName);
         }
 
-        @Override
-        protected void done() {
-
-            try {
-                get();
-                System.out.println("Thread beendet" + Thread.currentThread().getId());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(Client.this, "Fehler beim Beenden", "Fehler entstanden", JOptionPane.ERROR_MESSAGE);
-            }
-
-        }
-
         protected void process(ArrayList<Response> list) {
             for (Response x : list) {
                 System.out.println("Process " + x + "Thread " + Thread.currentThread().getName());
@@ -267,11 +254,11 @@ public class Client extends javax.swing.JFrame {
                     jbutClear.setEnabled(false);
                     jbutEnd.setEnabled(false);
                 }
-                if(x.isRunning()){
+                if (x.isRunning()) {
                     jbutStart.setEnabled(false);
                     jbutStop.setEnabled(true);
                     jbutClear.setEnabled(true);
-                }else {
+                } else {
                     jbutStart.setEnabled(true);
                     jbutStop.setEnabled(false);
                     jbutClear.setEnabled(false);
@@ -280,5 +267,14 @@ public class Client extends javax.swing.JFrame {
             }
         }
 
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(Client.this, "Unbekannter Fehler", "Fehler", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
